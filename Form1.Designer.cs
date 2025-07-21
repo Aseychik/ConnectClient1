@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.button1 = new System.Windows.Forms.Button();
             this.mainTextBox = new System.Windows.Forms.TextBox();
             this.inputTextBox = new System.Windows.Forms.TextBox();
@@ -35,17 +36,21 @@
             this.serverIpPort = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.clientNameTextBox = new System.Windows.Forms.TextBox();
+            this.breakConnectionButton = new System.Windows.Forms.Button();
+            this.updateMessages = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(194, 336);
+            this.button1.Location = new System.Drawing.Point(194, 170);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(141, 46);
             this.button1.TabIndex = 0;
             this.button1.Text = "Connect";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.connectButtonClick);
+            this.button1.Click += new System.EventHandler(this.ConnectButtonClick);
             // 
             // mainTextBox
             // 
@@ -66,7 +71,8 @@
             // 
             // inputTextBox
             // 
-            this.inputTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.inputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.inputTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.inputTextBox.Location = new System.Drawing.Point(341, 388);
             this.inputTextBox.Name = "inputTextBox";
@@ -83,11 +89,12 @@
             this.sendButton.TabIndex = 3;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
+            this.sendButton.Click += new System.EventHandler(this.SendMessageButtonClick);
             // 
             // serverIpPort
             // 
             this.serverIpPort.FormattingEnabled = true;
-            this.serverIpPort.Location = new System.Drawing.Point(12, 306);
+            this.serverIpPort.Location = new System.Drawing.Point(12, 49);
             this.serverIpPort.Name = "serverIpPort";
             this.serverIpPort.Size = new System.Drawing.Size(323, 24);
             this.serverIpPort.TabIndex = 4;
@@ -96,27 +103,65 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(12, 107);
+            this.label1.Location = new System.Drawing.Point(253, 391);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(81, 20);
+            this.label1.Size = new System.Drawing.Size(82, 20);
             this.label1.TabIndex = 5;
-            this.label1.Text = "Input line:";
+            this.label1.Text = "message:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(16, 284);
+            this.label2.Location = new System.Drawing.Point(8, 17);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(256, 20);
             this.label2.TabIndex = 6;
             this.label2.Text = "Server: server_ip:server_port";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label3.Location = new System.Drawing.Point(12, 91);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(115, 20);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Client name:";
+            // 
+            // clientNameTextBox
+            // 
+            this.clientNameTextBox.Location = new System.Drawing.Point(12, 114);
+            this.clientNameTextBox.Name = "clientNameTextBox";
+            this.clientNameTextBox.Size = new System.Drawing.Size(115, 22);
+            this.clientNameTextBox.TabIndex = 8;
+            // 
+            // breakConnectionButton
+            // 
+            this.breakConnectionButton.AutoEllipsis = true;
+            this.breakConnectionButton.BackColor = System.Drawing.Color.Red;
+            this.breakConnectionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.breakConnectionButton.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.breakConnectionButton.Location = new System.Drawing.Point(12, 388);
+            this.breakConnectionButton.Name = "breakConnectionButton";
+            this.breakConnectionButton.Size = new System.Drawing.Size(126, 48);
+            this.breakConnectionButton.TabIndex = 9;
+            this.breakConnectionButton.Text = "Break connection";
+            this.breakConnectionButton.UseVisualStyleBackColor = false;
+            this.breakConnectionButton.Click += new System.EventHandler(this.BreakConnection);
+            // 
+            // updateMessages
+            // 
+            this.updateMessages.Tick += new System.EventHandler(this.UpdateResieveMessage);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.breakConnectionButton);
+            this.Controls.Add(this.clientNameTextBox);
+            this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.serverIpPort);
@@ -141,6 +186,10 @@
         private System.Windows.Forms.ComboBox serverIpPort;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox clientNameTextBox;
+        private System.Windows.Forms.Button breakConnectionButton;
+        private System.Windows.Forms.Timer updateMessages;
     }
 }
 
