@@ -58,6 +58,8 @@ namespace ConnectClient1
             helpDict.Add("+connect", "+connect Uid\r\nУстанавливает прямую передачу сообщений к клиенту с заданным Uid\r\nВсе сообщения будут передаваться только данному клиенту\r\nДля отключения напишите +connectEnd");
             helpDict.Add("+connectEnd", "+connectEnd\r\nОтключает прямую передачу сообщений, включаемую +connect");
             helpDict.Add("+sendto", "+sendto Uid message_text\r\nОтправляет сообщение message_text клиенту с заданым Uid");
+            helpDict.Add("+sendfile", "+sendfile (выбор файла)\r\nОтправляет выбранный файл пользователю, к которому стоит прямая передача сообщений\r\nПрямое подключение включается через +connect");
+            helpDict.Add("+sendfiletouid", "+sendfiletouid Uid_пользователя (выбор файла)\r\nОтправляет выбранный файл пользователю с заданным Uid");
             helpListBox.Items.Clear();
             helpListBox.Items.AddRange(helpDict.Keys.ToArray());
         }
@@ -91,13 +93,22 @@ namespace ConnectClient1
                             {
                                 case "+sendfiletoserver":
                                     if (!ClientWF.isConnected) break;
+                                    OpenFileDialog openFileDialog = new OpenFileDialog();
+                                    if (openFileDialog.ShowDialog() == DialogResult.OK)
+                                    {
+                                        mainTextBox.AppendText($"\r\nFile send: {openFileDialog.FileName}");
+                                    }
+                                    else
+                                        break;
 
-                                    SendMessage($"+sendfiletoserver {inputTextBox.Text} {new FileInfo(openFileDialog1.FileName).Length}");
+                                    SendMessage($"+sendfiletoserver {inputTextBox.Text} {new FileInfo(openFileDialog.FileName).Length}");
+                                    mainTextBox.AppendText($"\r\nSent {new FileInfo(openFileDialog.FileName).Length} bytes");
                                     try
                                     {
-                                        byte[] file = File.ReadAllBytes(openFileDialog1.FileName);
+                                        byte[] file = File.ReadAllBytes(openFileDialog.FileName);
+                                        mainTextBox.AppendText($"\r\nfile have {file.Length} bytes");
                                         ClientWF.SendBytes(ClientWF.sendmessage, file, ref mainTextBox);
-                                        break;
+                                        mainTextBox.AppendText("\r\nsent");
                                     }
                                     catch (Exception ex)
                                     {
@@ -112,24 +123,55 @@ namespace ConnectClient1
                                         if (fileDialog.ShowDialog() == DialogResult.OK)
                                         {
                                             mainTextBox.AppendText($"\r\nSelectedFile: {fileDialog.FileName}");
-                                            
-
-
-
-
-
-
-
-
+                                            SendMessage($"+sendfile {new FileInfo(fileDialog.FileName).Length}");
+                                            try
+                                            {
+                                                byte[] file = File.ReadAllBytes(fileDialog.FileName);
+                                                ClientWF.SendBytes(ClientWF.sendmessage, file, ref mainTextBox);
+                                                break;
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                mainTextBox.AppendText($"\r\nSend file error: {ex.Message}");
+                                            }
                                         }
                                     }
-                                    catch (Exception ex) {
+                                    catch (Exception ex)
+                                    {
+                                        mainTextBox.AppendText($"\r\nOpen file error: {ex.Message}");
+                                    }
+                                    break;
+                                case "+sendfiletouid":
+                                    try
+                                    {
+                                        OpenFileDialog fileDialog = new OpenFileDialog();
+                                        if (fileDialog.ShowDialog() == DialogResult.OK)
+                                        {
+                                            mainTextBox.AppendText($"\r\nSelectedFile: {fileDialog.FileName}");
+                                            SendMessage($"+sendfiletouid {inputTextBox.Text.Split(' ')[1]} {new FileInfo(fileDialog.FileName).Length}");
+                                            try
+                                            {
+                                                byte[] file = File.ReadAllBytes(fileDialog.FileName);
+                                                ClientWF.SendBytes(ClientWF.sendmessage, file, ref mainTextBox);
+                                                break;
+                                            }
+                                            catch (Exception ex)
+                                            {
+                                                mainTextBox.AppendText($"\r\nSend file error: {ex.Message}");
+                                            }
+                                        }
+                                    }
+                                    catch (Exception ex)
+                                    {
                                         mainTextBox.AppendText($"\r\nOpen file error: {ex.Message}");
                                     }
                                     break;
                             }
                         }
-                        SendMessage(inputTextBox.Text);
+                        else
+                        {
+                            SendMessage(inputTextBox.Text);
+                        }
                         inputTextBox.Text = "";
                     }
                     break;
@@ -165,7 +207,7 @@ namespace ConnectClient1
         {
             if (ClientWF.isConnected) {
                 ClientWF.SendMessages(ClientWF.sendmessage, message, ref mainTextBox);
-                mainTextBox.AppendText(Environment.NewLine + "Message send: " + inputTextBox.Text);
+                mainTextBox.AppendText(Environment.NewLine + "Message send: " + message);
             }
         }
 
@@ -216,6 +258,34 @@ namespace ConnectClient1
         public void PrintText(string text)
         {
             nmessage = text;
+        }
+
+        private void ReceiveByteMessage(NetworkStream stream, long len)
+        {
+            byte[] buffer = new byte[len];
+
+            while (true)
+            {
+                try
+                {
+                    int bytesRead = stream.Read(buffer, 0, buffer.Length);
+                    if (bytesRead == 0) break;
+                    SaveFileDialog saveDialog = new SaveFileDialog();
+                    saveDialog.ShowDialog();
+                    File.WriteAllBytes(saveDialog.FileName, buffer);
+                    PrintText($"File saved at: {saveDialog.FileName}");
+                }
+                catch (IOException ex)
+                {
+                    PrintText(Environment.NewLine + $"Receive error: {ex.Message}");
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    PrintText(Environment.NewLine + $"Message receive error: {ex.Message}");
+                    break;
+                }
+            }
         }
 
         private void ReceiveMessages(NetworkStream stream)

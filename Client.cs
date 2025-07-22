@@ -95,7 +95,10 @@ namespace ConnectClient1
             try
             {
                 stream.Write(data, 0, data.Length);
-                outputText.AppendText($"The data has been sent");
+                /*SaveFileDialog d = new SaveFileDialog();
+                d.ShowDialog();
+                File.WriteAllBytes(d.FileName, data);
+                outputText.AppendText($"\r\nThe data has been sent ({data.Length} bytes)");*/
             }
             catch (IOException ex)
             {
@@ -131,7 +134,7 @@ namespace ConnectClient1
         {
             Console.WriteLine("Chat client started");
 
-            string clientName, serverIp = " ", s;
+            string clientName, serverIp = " ";
             int port = 8068;
 
             string path = @"config.txt";
