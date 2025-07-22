@@ -90,6 +90,23 @@ namespace ConnectClient1
             }
         }
 
+        public static void SendBytes(NetworkStream stream, byte[] data, ref TextBox outputText)
+        {
+            try
+            {
+                stream.Write(data, 0, data.Length);
+                outputText.AppendText($"The data has been sent");
+            }
+            catch (IOException ex)
+            {
+                outputText.AppendText(Environment.NewLine + $"Send error: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                outputText.AppendText(Environment.NewLine + $"Message send error: {ex.Message}");
+            }
+        }
+
         public static void SendMessages(NetworkStream stream, string message, ref TextBox outputText)
         {
             try

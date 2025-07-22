@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.button1 = new System.Windows.Forms.Button();
+            this.connectionButton = new System.Windows.Forms.Button();
             this.mainTextBox = new System.Windows.Forms.TextBox();
             this.inputTextBox = new System.Windows.Forms.TextBox();
             this.sendButton = new System.Windows.Forms.Button();
@@ -38,19 +38,24 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.clientNameTextBox = new System.Windows.Forms.TextBox();
-            this.breakConnectionButton = new System.Windows.Forms.Button();
+            this.disconnectionButton = new System.Windows.Forms.Button();
             this.updateMessages = new System.Windows.Forms.Timer(this.components);
+            this.helpButton = new System.Windows.Forms.Button();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.helpTextBox = new System.Windows.Forms.TextBox();
+            this.helpListBox = new System.Windows.Forms.ListBox();
+            this.selectFileButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // button1
+            // connectionButton
             // 
-            this.button1.Location = new System.Drawing.Point(194, 170);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(141, 46);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Connect";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.ConnectButtonClick);
+            this.connectionButton.Location = new System.Drawing.Point(194, 102);
+            this.connectionButton.Name = "connectionButton";
+            this.connectionButton.Size = new System.Drawing.Size(141, 46);
+            this.connectionButton.TabIndex = 0;
+            this.connectionButton.Text = "Connect";
+            this.connectionButton.UseVisualStyleBackColor = true;
+            this.connectionButton.Click += new System.EventHandler(this.ConnectButtonClick);
             // 
             // mainTextBox
             // 
@@ -65,7 +70,7 @@
             this.mainTextBox.Name = "mainTextBox";
             this.mainTextBox.ReadOnly = true;
             this.mainTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Both;
-            this.mainTextBox.Size = new System.Drawing.Size(447, 370);
+            this.mainTextBox.Size = new System.Drawing.Size(560, 416);
             this.mainTextBox.TabIndex = 1;
             this.mainTextBox.Text = "Initial Text";
             // 
@@ -74,18 +79,19 @@
             this.inputTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.inputTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.inputTextBox.Location = new System.Drawing.Point(341, 388);
+            this.inputTextBox.Location = new System.Drawing.Point(341, 430);
             this.inputTextBox.Name = "inputTextBox";
-            this.inputTextBox.Size = new System.Drawing.Size(375, 27);
+            this.inputTextBox.Size = new System.Drawing.Size(464, 27);
             this.inputTextBox.TabIndex = 2;
             this.inputTextBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.inputKeyDown);
             this.inputTextBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.inputKeyPress);
             // 
             // sendButton
             // 
-            this.sendButton.Location = new System.Drawing.Point(725, 388);
+            this.sendButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.sendButton.Location = new System.Drawing.Point(811, 430);
             this.sendButton.Name = "sendButton";
-            this.sendButton.Size = new System.Drawing.Size(63, 27);
+            this.sendButton.Size = new System.Drawing.Size(61, 27);
             this.sendButton.TabIndex = 3;
             this.sendButton.Text = "Send";
             this.sendButton.UseVisualStyleBackColor = true;
@@ -101,9 +107,11 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label1.AutoSize = true;
+            this.label1.CausesValidation = false;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label1.Location = new System.Drawing.Point(253, 391);
+            this.label1.Location = new System.Drawing.Point(253, 437);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(82, 20);
             this.label1.TabIndex = 5;
@@ -136,39 +144,91 @@
             this.clientNameTextBox.Size = new System.Drawing.Size(115, 22);
             this.clientNameTextBox.TabIndex = 8;
             // 
-            // breakConnectionButton
+            // disconnectionButton
             // 
-            this.breakConnectionButton.AutoEllipsis = true;
-            this.breakConnectionButton.BackColor = System.Drawing.Color.Red;
-            this.breakConnectionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.breakConnectionButton.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.breakConnectionButton.Location = new System.Drawing.Point(12, 388);
-            this.breakConnectionButton.Name = "breakConnectionButton";
-            this.breakConnectionButton.Size = new System.Drawing.Size(126, 48);
-            this.breakConnectionButton.TabIndex = 9;
-            this.breakConnectionButton.Text = "Break connection";
-            this.breakConnectionButton.UseVisualStyleBackColor = false;
-            this.breakConnectionButton.Click += new System.EventHandler(this.BreakConnection);
+            this.disconnectionButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.disconnectionButton.AutoEllipsis = true;
+            this.disconnectionButton.BackColor = System.Drawing.Color.Red;
+            this.disconnectionButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.disconnectionButton.ForeColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            this.disconnectionButton.Location = new System.Drawing.Point(12, 437);
+            this.disconnectionButton.Name = "disconnectionButton";
+            this.disconnectionButton.Size = new System.Drawing.Size(142, 48);
+            this.disconnectionButton.TabIndex = 9;
+            this.disconnectionButton.Text = "Disconnect";
+            this.disconnectionButton.UseVisualStyleBackColor = false;
+            this.disconnectionButton.Click += new System.EventHandler(this.BreakConnection);
             // 
             // updateMessages
             // 
             this.updateMessages.Tick += new System.EventHandler(this.UpdateResieveMessage);
             // 
+            // helpButton
+            // 
+            this.helpButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.helpButton.Location = new System.Drawing.Point(312, 411);
+            this.helpButton.Name = "helpButton";
+            this.helpButton.Size = new System.Drawing.Size(23, 23);
+            this.helpButton.TabIndex = 10;
+            this.helpButton.Text = "?";
+            this.helpButton.UseVisualStyleBackColor = true;
+            this.helpButton.Click += new System.EventHandler(this.OpenHelpMenu);
+            // 
+            // helpTextBox
+            // 
+            this.helpTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.helpTextBox.BackColor = System.Drawing.SystemColors.Window;
+            this.helpTextBox.Enabled = false;
+            this.helpTextBox.Location = new System.Drawing.Point(341, 154);
+            this.helpTextBox.Multiline = true;
+            this.helpTextBox.Name = "helpTextBox";
+            this.helpTextBox.ReadOnly = true;
+            this.helpTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.helpTextBox.Size = new System.Drawing.Size(390, 196);
+            this.helpTextBox.TabIndex = 12;
+            this.helpTextBox.Visible = false;
+            // 
+            // helpListBox
+            // 
+            this.helpListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.helpListBox.Enabled = false;
+            this.helpListBox.FormattingEnabled = true;
+            this.helpListBox.ItemHeight = 16;
+            this.helpListBox.Location = new System.Drawing.Point(194, 154);
+            this.helpListBox.Name = "helpListBox";
+            this.helpListBox.Size = new System.Drawing.Size(141, 196);
+            this.helpListBox.TabIndex = 11;
+            this.helpListBox.Visible = false;
+            this.helpListBox.SelectedIndexChanged += new System.EventHandler(this.helpListBox_SelectedIndexChanged);
+            this.helpListBox.SelectedValueChanged += new System.EventHandler(this.HelpSelValChanged);
+            // 
+            // selectFileButton
+            // 
+            this.selectFileButton.Location = new System.Drawing.Point(872, 430);
+            this.selectFileButton.Name = "selectFileButton";
+            this.selectFileButton.Size = new System.Drawing.Size(30, 26);
+            this.selectFileButton.TabIndex = 11;
+            this.selectFileButton.Text = "fl";
+            this.selectFileButton.UseVisualStyleBackColor = true;
+            this.selectFileButton.Click += new System.EventHandler(this.SelectFileButtonClick);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.breakConnectionButton);
+            this.ClientSize = new System.Drawing.Size(913, 496);
+            this.Controls.Add(this.selectFileButton);
+            this.Controls.Add(this.helpButton);
+            this.Controls.Add(this.disconnectionButton);
             this.Controls.Add(this.clientNameTextBox);
+            this.Controls.Add(this.mainTextBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.serverIpPort);
             this.Controls.Add(this.sendButton);
             this.Controls.Add(this.inputTextBox);
-            this.Controls.Add(this.mainTextBox);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.connectionButton);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -179,7 +239,7 @@
 
         #endregion
 
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button connectionButton;
         private System.Windows.Forms.TextBox mainTextBox;
         private System.Windows.Forms.TextBox inputTextBox;
         private System.Windows.Forms.Button sendButton;
@@ -188,8 +248,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox clientNameTextBox;
-        private System.Windows.Forms.Button breakConnectionButton;
+        private System.Windows.Forms.Button disconnectionButton;
         private System.Windows.Forms.Timer updateMessages;
+        private System.Windows.Forms.Button helpButton;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.TextBox helpTextBox;
+        private System.Windows.Forms.ListBox helpListBox;
+        private System.Windows.Forms.Button selectFileButton;
     }
 }
 
