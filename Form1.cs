@@ -166,6 +166,9 @@ namespace ConnectClient1
                                         mainTextBox.AppendText($"\r\nOpen file error: {ex.Message}");
                                     }
                                     break;
+                                default:
+                                    SendMessage(inputTextBox.Text);
+                                    break;
                             }
                         }
                         else
@@ -305,6 +308,26 @@ namespace ConnectClient1
                         switch (message.Split(' ')[0])
                         {
                             case "+sendfiletouid":
+                                try
+                                {
+                                    byte[] nbuffer = new byte[long.Parse(message.Split(' ')[2])];
+                                    PrintText($"\r\nAccepted {nbuffer.Length} bytes");
+                                    int nbytesRead = stream.Read(nbuffer, 0, nbuffer.Length);
+                                    if (nbytesRead == 0) break;
+
+                                    SaveFileDialog saveFile = new SaveFileDialog();
+                                    if (saveFile.ShowDialog() == DialogResult.OK)
+                                    {
+                                        File.WriteAllBytes(saveFile.FileName, nbuffer);
+                                        PrintText($"\r\nFile was saved at {saveFile.FileName}");
+                                    }
+                                    else PrintText("\r\nSave file error");
+                                }
+                                catch (Exception ex)
+                                {
+                                    PrintText($"\r\nSendfile error: {ex.Message}");
+                                }
+                                break;
                             case "+sendfile":
                                 try
                                 {
