@@ -19,6 +19,9 @@ namespace ConnectClient1
         Thread receiveThread;
         Dictionary<string, string> helpDict = new Dictionary<string, string>();
         bool sendfilepassword = false;
+        SaveFileDialog saveFile = new SaveFileDialog();
+        byte[] savefileBuffer;
+        bool savefile = false;
 
         string nmessage = "";
 
@@ -313,15 +316,24 @@ namespace ConnectClient1
                                     byte[] nbuffer = new byte[long.Parse(message.Split(' ')[2])];
                                     PrintText($"\r\nAccepted {nbuffer.Length} bytes");
                                     int nbytesRead = stream.Read(nbuffer, 0, nbuffer.Length);
-                                    if (nbytesRead == 0) break;
-
-                                    SaveFileDialog saveFile = new SaveFileDialog();
-                                    if (saveFile.ShowDialog() == DialogResult.OK)
-                                    {
-                                        File.WriteAllBytes(saveFile.FileName, nbuffer);
-                                        PrintText($"\r\nFile was saved at {saveFile.FileName}");
+                                    if (nbytesRead == 0) {
+                                        PrintText("\r\nError: accepted file is empty");
+                                        break; 
                                     }
-                                    else PrintText("\r\nSave file error");
+                                    /*int len = int.Parse(message.Split(' ')[2]);
+                                    byte[] nbuffer = new byte[len];
+                                    int acceptedbytes = 0;
+                                    int nbytesRead = -1;
+                                    while (acceptedbytes != len && nbytesRead != 0)
+                                    {
+                                        PrintText($"\r\nRecieved {acceptedbytes}, ostalos: {len - acceptedbytes}");
+                                        nbytesRead = stream.Read(nbuffer, acceptedbytes, nbuffer.Length);
+                                        acceptedbytes += nbytesRead;
+                                    }*/
+
+
+                                    savefileBuffer = nbuffer;
+                                    savefile = true;
                                 }
                                 catch (Exception ex)
                                 {
@@ -331,10 +343,21 @@ namespace ConnectClient1
                             case "+sendfile":
                                 try
                                 {
-                                    byte[] nbuffer = new byte[long.Parse(message.Split(' ')[2])];
+                                    int len = int.Parse(message.Split(' ')[1]);
+                                    byte[] nbuffer = new byte[len];
+                                    PrintText($"\r\nAccepted {nbuffer.Length} bytes");
+                                    int acceptedbytes = 0;
+                                    int nbytesRead = -1;
+                                    while (acceptedbytes != len && nbytesRead != 0)
+                                    {
+                                        PrintText($"\r\nRecieved {acceptedbytes}, ostalos: {len - acceptedbytes}");
+                                        nbytesRead = stream.Read(nbuffer, acceptedbytes, nbuffer.Length);
+                                        acceptedbytes += nbytesRead;
+                                    }
+                                    /*byte[] nbuffer = new byte[long.Parse(message.Split(' ')[1])];
                                     PrintText($"\r\nAccepted {nbuffer.Length} bytes");
                                     int nbytesRead = stream.Read(nbuffer, 0, nbuffer.Length);
-                                    if (nbytesRead == 0) break;
+                                    if (nbytesRead == 0) break;*/
 
                                     SaveFileDialog saveFile = new SaveFileDialog();
                                     if (saveFile.ShowDialog() == DialogResult.OK)
@@ -389,6 +412,16 @@ namespace ConnectClient1
         {
             mainTextBox.AppendText(nmessage);
             nmessage = "";
+            if (savefile)
+            {
+                savefile = false;
+                if (saveFile.ShowDialog() == DialogResult.OK)
+                {
+                    File.WriteAllBytes(saveFile.FileName, savefileBuffer);
+                    PrintText($"\r\nFile was saved at {saveFile.FileName}");
+                }
+                else PrintText("\r\nSave file error");
+            }
         }
 
         private void OpenHelpMenu(object sender, EventArgs e)
