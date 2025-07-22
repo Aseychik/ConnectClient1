@@ -307,7 +307,7 @@ namespace ConnectClient1
                             case "+sendfile":
                                 try
                                 {
-                                    byte[] nbuffer = new byte[long.Parse(message.Split()[1])];
+                                    byte[] nbuffer = new byte[long.Parse(message.Split(' ')[2])];
                                     PrintText($"\r\nAccepted {nbuffer.Length} bytes");
                                     int nbytesRead = stream.Read(nbuffer, 0, nbuffer.Length);
                                     if (nbytesRead == 0) break;
