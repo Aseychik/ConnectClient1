@@ -302,8 +302,9 @@ namespace ConnectClient1
                     string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
                     if (message.StartsWith("+"))
                     {
-                        switch (message.Split()[0])
+                        switch (message.Split(' ')[0])
                         {
+                            case "+sendfiletouid":
                             case "+sendfile":
                                 try
                                 {
